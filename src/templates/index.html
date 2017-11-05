@@ -1,29 +1,44 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <style>
-      #map {
-        height: 400px;
-        width: 100%;
-       }
-    </style>
+    <link rel="stylesheet" href="/static/css/location-search.css">
   </head>
   <body>
-    <h3>My Google Maps Demo</h3>
-    <div id="map"></div>
-    <script>
-      function initMap() {
-        var uluru = {lat: -25.363, lng: 131.044};
-        var map = new google.maps.Map(document.getElementById('map'), {
-          zoom: 4,
-          center: uluru
-        });
-        var marker = new google.maps.Marker({
-          position: uluru,
-          map: map
-        });
-      }
-    </script>
+    <div class="bodywrapper">
+      <h1>SF Movie Locations Search</h1>
+      <div id="location-map-app">
+        <div class="filter-form">
+          <input type="text" v-model="title" v-on:keyup.enter="updateList">
+          <button v-on:click="updateList">Search</button>
+          <status-message v-bind:message="message" v-if="message" />
+        </div>
+        <div class="current-count-wrapper">
+          <current-count v-bind:count="count" v-if="count" />
+        </div>
+        <div id="location-map"></div>
+        <div class="result-table-wrapper">
+          <table>
+            <thead>
+              <tr>
+                <th>Title</th>
+                <th>Year</th>
+                <th>Locations</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr is="location-table-row"
+                v-for="location in locations"
+                v-bind:location="location"
+                v-bind:key="location.id"
+              />
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+    <script src="https://unpkg.com/vue"></script>
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+    <script src="/static/js/location-search.js"></script>
     <script async defer
     src="https://maps.googleapis.com/maps/api/js?key={{ GOOGLE_API_KEY }}&callback=initMap">
     </script>
