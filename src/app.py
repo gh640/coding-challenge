@@ -8,10 +8,10 @@ from flask import Flask
 from flask import request
 from flask import send_from_directory
 
-# from .json_loader import load_locations
-# from .json_loader import prepare_locations
-from .models import Location
-from .utils import render, location_to_dict
+# from json_loader import load_locations
+# from json_loader import prepare_locations
+from models import Location
+from utils import render, location_to_dict
 
 
 app = Flask(__name__)
