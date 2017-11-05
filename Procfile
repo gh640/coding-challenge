@@ -1,1 +1,1 @@
-web: cd src && FLASK_APP=app.py python -m flask run
+web: cd src && gunicorn app:app --log-file -
