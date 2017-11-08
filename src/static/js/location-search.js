@@ -84,6 +84,9 @@ const MAP_STYLES = [
   }
 ];
 
+/**
+ * マップを初期化する。
+ */
 function initMap() {
   locationMap = new google.maps.Map(document.getElementById(MAP_ID), {
     zoom: 9,
@@ -92,6 +95,11 @@ function initMap() {
   });
 }
 
+/**
+ * 新しいロケ地設置を受けてマップを更新する。
+ *
+ * @param Array locations
+ */
 function updateMap(locations) {
   clearMarkers(markers);
 
@@ -109,19 +117,31 @@ function updateMap(locations) {
   }
 }
 
-// Sets the map on all markers in the array.
+/**
+ * 指定されたマーカーを削除する。
+ */
+function clearMarkers(markers) {
+  setMapOnAll(markers, null);
+  markers = [];
+}
+
+/**
+ * マーカーにマップをセットする。
+ *
+ * @param google.maps.Marker markers
+ * @param google.maps.Map map
+ */
 function setMapOnAll(markers, map) {
   for (var i = 0; i < markers.length; i++) {
     markers[i].setMap(map);
   }
 }
 
-// Removes the markers from the map, but keeps them in the array.
-function clearMarkers(markers) {
-  setMapOnAll(markers, null);
-  markers = [];
-}
-
+/**
+ * ロケ地からマップの中心を計算する。
+ *
+ * @param Array locations
+ */
 function calcCenterOfMap(locations) {
   if (locations.length < 1) {
     return null;
@@ -146,6 +166,9 @@ function calcCenterOfMap(locations) {
 
   init();
 
+  /**
+   * ページの初期化処理を実行する。
+   */
   function init() {
     defineComponents();
 
@@ -169,6 +192,9 @@ function calcCenterOfMap(locations) {
     };
   }
 
+  /**
+   * 利用するコンポーネントを定義する。
+   */
   function defineComponents() {
     // 現在のカウント数
     Vue.component('current-count', {
@@ -193,6 +219,9 @@ function calcCenterOfMap(locations) {
     })
   }
 
+  /**
+   * ロケ地データをフェッチして更新する。
+   */
   function updateLocations(app, title) {
     app.message = 'loading...';
     axios.get('/location', {
