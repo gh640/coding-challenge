@@ -1,5 +1,6 @@
 var locationMap;
 var markers = [];
+var infoWindowsOpened = [];
 
 const MAP_ID = 'location-map';
 const MAP_CENTER = {lat: 37.7827, lng: -122.4186};
@@ -108,10 +109,26 @@ function updateMap(locations) {
       position: {lat: l.geo_lat, lng: l.geo_lng},
       map: locationMap
     });
+
+    var infoWindow = new google.maps.InfoWindow({
+      content: `<div class="map-info-window"><h1>${l.title}</h1><div>${l.locations}</div></div>`
+    });
+
+    marker.addListener('click', function () {
+      // 他のウィンドウを閉じる
+      infoWindowsOpened.forEach(function (w) {
+        w.close();
+      });
+      infoWindowsOpened = [];
+
+      infoWindow.open(locationMap, marker);
+      infoWindowsOpened.push(infoWindow);
+    });
+
     markers.push(marker);
   });
 
-  center = calcCenterOfMap(locations);
+  var center = calcCenterOfMap(locations);
   if (center) {
     locationMap.setCenter(center);
   }

@@ -28,6 +28,15 @@
   margin-bottom: 20px;
 }
 
+.map-info-window {
+  padding: 10px 4px;
+}
+
+.map-info-window h1 {
+  font-size: 1rem;
+  margin-top: 0;
+}
+
 .result-table-wrapper {
   margin-bottom: 20px;
   max-height: 200px;
