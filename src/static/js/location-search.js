@@ -4,6 +4,7 @@ var infoWindowsOpened = [];
 
 const MAP_ID = 'location-map';
 const MAP_CENTER = {lat: 37.7827, lng: -122.4186};
+const MAP_ZOOM = 10;
 const MAP_STYLES = [
   {elementType: 'geometry', stylers: [{color: '#242f3e'}]},
   {elementType: 'labels.text.stroke', stylers: [{color: '#242f3e'}]},
@@ -90,7 +91,7 @@ const MAP_STYLES = [
  */
 function initMap() {
   locationMap = new google.maps.Map(document.getElementById(MAP_ID), {
-    zoom: 9,
+    zoom: MAP_ZOOM,
     styles: MAP_STYLES,
     center: MAP_CENTER
   });
@@ -107,11 +108,9 @@ function updateMap(locations) {
   locations.forEach(function (l) {
     var marker = new google.maps.Marker({
       position: {lat: l.geo_lat, lng: l.geo_lng},
-      map: locationMap
-    });
-
-    var infoWindow = new google.maps.InfoWindow({
-      content: `<div class="map-info-window"><h1>${l.title}</h1><div>${l.locations}</div></div>`
+      map: locationMap,
+      // マップ内ウィンドウに情報を表示するためにロケ地情報を持たせる
+      location: l,
     });
 
     marker.addListener('click', function () {
@@ -120,6 +119,11 @@ function updateMap(locations) {
         w.close();
       });
       infoWindowsOpened = [];
+
+      // マップ内ウィンドウに映画情報を表示する
+      var infoWindow = new google.maps.InfoWindow({
+        content: `<div class="map-info-window"><h1>${this.location.title} (${this.location.year})</h1><div>${this.location.locations}</div></div>`
+      });
 
       infoWindow.open(locationMap, marker);
       infoWindowsOpened.push(infoWindow);
