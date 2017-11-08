@@ -5,10 +5,10 @@
   </head>
   <body>
     <div class="bodywrapper">
-      <h1>SF Movie Locations Search</h1>
+      <h1 class="page-title">SF Movie Locations Search</h1>
       <div id="location-map-app">
         <div class="filter-form">
-          <input type="text" v-model="title" v-on:keyup.enter="updateList">
+          <input type="text" v-model="title" v-on:keyup.enter="updateList" />
           <button v-on:click="updateList">Search</button>
           <status-message v-bind:message="message" v-if="message" />
         </div>
@@ -20,9 +20,9 @@
           <table>
             <thead>
               <tr>
-                <th>Title</th>
-                <th>Year</th>
-                <th>Locations</th>
+                <th class="location-table-row-title">Title</th>
+                <th class="location-table-row-year">Year</th>
+                <th class="location-table-row-locations">Locations</th>
               </tr>
             </thead>
             <tbody>
