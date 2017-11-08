@@ -1,16 +1,25 @@
 .bodywrapper {
-  width: 800px;
-  max-width: 95%;
+  width: 96%;
+  max-width: 800px;
   margin-left: auto;
   margin-right: auto;
+  font-family: "SF Pro Text", "SF Pro Icons", "Helvetica Neue", Helvetica, Arial, sans-serif;
+  font-feature-settings: 'kern';
+  -webkit-font-smoothing: antialiased;
+}
+
+.page-title {
+  text-align: center;
 }
 
 .filter-form {
   margin-bottom: 20px;
+  text-align: center;
 }
 
 .current-count-wrapper {
   margin-bottom: 20px;
+  text-align: center;
 }
 
 #location-map {
@@ -28,26 +37,28 @@
 .result-table-wrapper table {
   width: 100%;
   table-layout: fixed;
+  border-spacing: 1px;
 }
 
 .result-table-wrapper tbody {}
 
 .result-table-wrapper th {
   padding: 0.5em;
-  margin: 1px;
   background-color: #eee;
 }
 
 .result-table-wrapper td {
   padding: 0.5em;
-  margin: 1px;
   background-color: #f8f8f8;
 }
 
-.result-table-wrapper .location-table-row-title {}
+.result-table-wrapper .location-table-row-title {
+  width: 30%;
+}
 
 .result-table-wrapper .location-table-row-year {
   text-align: center;
+  width: 20%;
 }
 
 .result-table-wrapper .location-table-row-locations {}
