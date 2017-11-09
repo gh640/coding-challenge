@@ -14,7 +14,7 @@ from datetime import datetime
 from concurrent.futures import ThreadPoolExecutor, as_completed
 
 from models import db, Location
-from json_loader import load_locations, prepare_locations
+from .json_loader import load_locations, prepare_locations
 from .location_data_fetcher import fetch_one
 
 
