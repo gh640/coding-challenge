@@ -3,18 +3,24 @@
 '''フロントコントローラを提供する
 '''
 
+import os
+
 from flask import json
 from flask import Flask
 from flask import request
 from flask import send_from_directory
+from flask import render_template
 
 # from json_loader import load_locations
 # from json_loader import prepare_locations
 from models import Location
-from utils import render, location_to_dict
+from utils import location_to_dict
 
 
 app = Flask(__name__)
+app.config['GOOGLE_API_KEY'] = os.environ['GOOGLE_API_KEY']
+app.config['ROOT'] = (app.config['APPLICATION_ROOT']
+                      if app.config['APPLICATION_ROOT'] else '')
 
 
 @app.route('/static/<path:path>')
@@ -24,7 +30,7 @@ def send_js(path):
 
 @app.route('/')
 def index():
-    return render(app, 'index.html')
+    return render_template('index.html')
 
 
 @app.route('/location')

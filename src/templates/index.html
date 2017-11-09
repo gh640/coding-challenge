@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <link rel="stylesheet" href="{{ APPLICATION_ROOT }}/static/css/location-search.css">
+    <link rel="stylesheet" href="{{ config.ROOT }}/static/css/location-search.css">
   </head>
   <body>
     <div class="bodywrapper">
@@ -59,9 +59,9 @@
     <script src="https://unpkg.com/vue"></script>
     <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
     <script src="https://unpkg.com/lodash"></script>
-    <script src="{{ APPLICATION_ROOT }}/static/js/location-search.js"></script>
+    <script src="{{ config.ROOT }}/static/js/location-search.js"></script>
     <script async defer
-    src="https://maps.googleapis.com/maps/api/js?key={{ GOOGLE_API_KEY }}&callback=initMap">
+    src="https://maps.googleapis.com/maps/api/js?key={{ config.GOOGLE_API_KEY }}&callback=initMap">
     </script>
   </body>
 </html>
