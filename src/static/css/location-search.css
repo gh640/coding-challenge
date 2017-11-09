@@ -55,10 +55,7 @@ body {
   padding: 0.5em;
 }
 
-.filter-title-suggetions li:hover {
-  background-color: #f4f4f4;
-}
-
+.filter-title-suggetions li:hover,
 .filter-title-suggetions li.active {
   background-color: #eee;
 }
