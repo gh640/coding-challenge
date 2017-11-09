@@ -1,15 +1,35 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <link rel="stylesheet" href="/static/css/location-search.css">
+    <link rel="stylesheet" href="{{ APPLICATION_ROOT }}/static/css/location-search.css">
   </head>
   <body>
     <div class="bodywrapper">
       <h1 class="page-title">SF Movie Locations Search</h1>
       <div id="location-map-app">
         <div class="filter-form">
-          <input type="text" v-model="title" v-on:keyup.enter="updateList" />
-          <button v-on:click="updateList">Search</button>
+          <div class="filter-form-inner">
+            <input type="text"
+              class="filter-title"
+              v-model="title"
+              v-on:keyup.enter="selectSuggestionOrUpdateList"
+              v-on:keyup.down="down"
+              v-on:keyup.up="up"
+              v-on:keyup.esc="clearSuggestions"
+              v-on:keyup="updateSuggestion"
+            />
+            <ul class="filter-title-suggetions">
+              <li is="title-suggestion"
+                v-for="(suggestion, index) in suggestions"
+                v-bind:suggestion="suggestion"
+                v-bind:key="suggestion.id"
+                v-bind:class="{ active: isCurrent(index) }"
+                v-on:click.native="selectSuggestion(suggestion)"
+              >
+            </ul>
+          </div>
+        </div>
+        <div class="status-message-wrapper">
           <status-message v-bind:message="message" v-if="message" />
         </div>
         <div class="current-count-wrapper">
@@ -38,7 +58,8 @@
     </div>
     <script src="https://unpkg.com/vue"></script>
     <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
-    <script src="/static/js/location-search.js"></script>
+    <script src="https://unpkg.com/lodash"></script>
+    <script src="{{ APPLICATION_ROOT }}/static/js/location-search.js"></script>
     <script async defer
     src="https://maps.googleapis.com/maps/api/js?key={{ GOOGLE_API_KEY }}&callback=initMap">
     </script>

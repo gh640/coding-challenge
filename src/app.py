@@ -24,7 +24,7 @@ def send_js(path):
 
 @app.route('/')
 def index():
-    return render('index.html')
+    return render(app, 'index.html')
 
 
 @app.route('/location')
@@ -39,3 +39,17 @@ def location():
     locations = [location_to_dict(l) for l in query]
 
     return json.jsonify(locations)
+
+
+@app.route('/movie')
+def movie():
+    req_title = request.args.get('title', None)
+
+    query = Location.select(Location.title).distinct()
+
+    if req_title:
+        query = query.where(Location.title ** '%{}%'.format(req_title))
+
+    movies = [{'id': index, 'title': l.title} for index, l in enumerate(query)]
+
+    return json.jsonify(movies)

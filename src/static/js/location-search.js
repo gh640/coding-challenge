@@ -183,7 +183,10 @@ function calcCenterOfMap(locations) {
 }
 
 (function () {
+  // メッセージ表示時間（単位: ミリ秒）
   const MESSAGE_TTL = 2000;
+  // サジェスチョンを取得しに行くまでの街時間（単位: ミリ秒）
+  const SUGGESTION_WAIT = 400;
 
   init();
 
@@ -199,12 +202,97 @@ function calcCenterOfMap(locations) {
         title: '',
         count: '',
         message: '',
-        locations: []
+        suggestions: [],
+        locations: [],
+        currentIndex: -1,
+        suggestionSelected: false
       },
       methods: {
-        updateList: function (event) {
-          updateLocations(this, this.title);
-        }
+        selectSuggestionOrUpdateList: function (event) {
+          if (this.suggestions[this.currentIndex]) {
+            console.log(this.suggestions);
+            console.log(this.currentIndex);
+            this.selectSuggestion();
+          } else {
+            updateLocations(this, this.title);
+          }
+        },
+
+        updateSuggestion: _.debounce(function (event) {
+          if (this.suggestionSelected) {
+            this.suggestionSelected = false;
+            return;
+          }
+
+          const exceptions = [
+            'Enter',
+            'ArrowDown',
+            'ArrowUp',
+          ];
+
+          if (exceptions.includes(event.code)) {
+            return;
+          }
+
+          if (this.title) {
+            fetchSuggestions(this, this.title);
+          } else {
+            this.resetSuggestions();
+          }
+
+          this.resetIndex();
+        }, SUGGESTION_WAIT),
+
+        clearSuggestions: function (event) {
+          this.resetIndex();
+          this.resetSuggestions();
+        },
+
+        down: function (event) {
+          if (this.suggestions.length < 1) {
+            this.resetIndex();
+          }
+          if (this.currentIndex < this.suggestions.length - 1) {
+            this.currentIndex += 1;
+          }
+        },
+
+        up: function (event) {
+          if (this.suggestions.length < 1) {
+            this.resetIndex();
+          }
+          if (this.currentIndex > 1) {
+            this.currentIndex -= 1;
+          }
+        },
+
+        setCurrentIndex: function (index) {
+          this.currentIndex = index;
+        },
+
+        isCurrent: function (index) {
+          return index === this.currentIndex;
+        },
+
+        selectSuggestion: function (suggestion) {
+          if (suggestion) {
+            this.title = suggestion.title;
+          } else {
+            this.title = this.suggestions[this.currentIndex].title;
+          }
+
+          this.clearSuggestions();
+          this.suggestionSelected = true;
+        },
+
+        resetIndex: function () {
+          this.currentIndex -= 1;
+        },
+
+        resetSuggestions: function () {
+          this.suggestions = [];
+        },
+
       }
     })
 
@@ -217,6 +305,11 @@ function calcCenterOfMap(locations) {
    * 利用するコンポーネントを定義する。
    */
   function defineComponents() {
+    // 自動補完候補
+    Vue.component('title-suggestion', {
+      'props': ['suggestion'],
+      'template': '<li>{{ suggestion.title }}</li>'
+    });
     // 現在のカウント数
     Vue.component('current-count', {
       'props': ['count'],
@@ -238,6 +331,24 @@ function calcCenterOfMap(locations) {
         '<td class="location-table-row-locations">{{ location.locations }}</td>' +
         '</tr>'
     })
+  }
+
+  /**
+   * 映画タイトルの自動補完のために候補を取得する
+   */
+  function fetchSuggestions(app, title) {
+    axios.get('/movie', {
+        'params': {
+          'title': title
+        }
+      })
+      .then(function (response) {
+        app.suggestions = response.data;
+      })
+      .catch(function (error) {
+        app.message = 'failed to fetch data :(';
+        app.suggestions = [];
+      });
   }
 
   /**

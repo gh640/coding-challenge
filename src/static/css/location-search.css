@@ -1,3 +1,8 @@
+html,
+body {
+  font-size: 12px;
+}
+
 .bodywrapper {
   width: 96%;
   max-width: 800px;
@@ -13,6 +18,52 @@
 }
 
 .filter-form {
+  margin-bottom: 20px;
+  text-align: center;
+}
+
+.filter-form-inner {
+  width: 400px;
+  margin-left: auto;
+  margin-right: auto;
+  position: relative;
+}
+
+.filter-title {
+  box-sizing: border-box;
+  width: 100%;
+  padding: 0.5em;
+  font-size: 1rem;
+}
+
+.filter-title-suggetions {
+  box-sizing: border-box;
+  width: 100%;
+  padding: 0;
+  list-style-type: none;
+  text-align: left;
+  margin-top: 0;
+  margin-bottom: 0;
+  position: absolute;
+  max-height: 200px;
+  overflow: scroll;
+  z-index: 10;
+}
+
+.filter-title-suggetions li {
+  background-color: #f8f8f8;
+  padding: 0.5em;
+}
+
+.filter-title-suggetions li:hover {
+  background-color: #f4f4f4;
+}
+
+.filter-title-suggetions li.active {
+  background-color: #eee;
+}
+
+.status-message-wrapper {
   margin-bottom: 20px;
   text-align: center;
 }
