@@ -10,6 +10,7 @@ name = "pypi"
 flask = "*"
 peewee = "*"
 gunicorn = "*"
+requests = "*"
 
 
 [dev-packages]
