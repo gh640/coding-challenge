@@ -208,22 +208,23 @@ function calcCenterOfMap(locations) {
         suggestionSelected: false
       },
       methods: {
+        // サジェスチョンのうち 1 つを選択、またはリストを更新する
         selectSuggestionOrUpdateList: function (event) {
           if (this.suggestions[this.currentIndex]) {
-            console.log(this.suggestions);
-            console.log(this.currentIndex);
             this.selectSuggestion();
           } else {
             updateLocations(this, this.title);
           }
         },
 
+        // サジェスチョンのリストを更新する
         updateSuggestion: _.debounce(function (event) {
           if (this.suggestionSelected) {
             this.suggestionSelected = false;
             return;
           }
 
+          // 特別に処理をする要素は対象外とする
           const exceptions = [
             'Enter',
             'ArrowDown',
@@ -243,11 +244,13 @@ function calcCenterOfMap(locations) {
           this.resetIndex();
         }, SUGGESTION_WAIT),
 
+        // サジェスチョンをクリアする
         clearSuggestions: function (event) {
           this.resetIndex();
           this.resetSuggestions();
         },
 
+        // サジェスチョンの 1 つ下の要素を選択する
         down: function (event) {
           if (this.suggestions.length < 1) {
             this.resetIndex();
@@ -257,6 +260,7 @@ function calcCenterOfMap(locations) {
           }
         },
 
+        // サジェスチョンの 1 つ上の要素を選択する
         up: function (event) {
           if (this.suggestions.length < 1) {
             this.resetIndex();
@@ -266,14 +270,18 @@ function calcCenterOfMap(locations) {
           }
         },
 
-        setCurrentIndex: function (index) {
-          this.currentIndex = index;
-        },
-
+        // 現在のサジェスチョン行が選択中かどうかをチェックする
         isCurrent: function (index) {
           return index === this.currentIndex;
         },
 
+        // サジェスチョンのうち 1 つを選択しロケ地リストも更新する
+        selectSuggestionAndUpdateList: function (suggestion) {
+          this.selectSuggestion(suggestion);
+          updateLocations(this, this.title);
+        },
+
+        // サジェスチョンのうち 1 つを選択する
         selectSuggestion: function (suggestion) {
           if (suggestion) {
             this.title = suggestion.title;
@@ -283,12 +291,15 @@ function calcCenterOfMap(locations) {
 
           this.clearSuggestions();
           this.suggestionSelected = true;
+          this.$refs.title.focus();
         },
 
+        // インデックスを初期状態（ -1 ）にリセットする
         resetIndex: function () {
           this.currentIndex -= 1;
         },
 
+        // サジェスチョン一覧を削除する
         resetSuggestions: function () {
           this.suggestions = [];
         },
@@ -296,6 +307,7 @@ function calcCenterOfMap(locations) {
       }
     })
 
+    // マップを初期化する
     window.onload = function() {
       updateLocations(locationMapApp, '');
     };

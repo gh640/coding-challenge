@@ -11,6 +11,7 @@
           <div class="filter-form-inner">
             <input type="text"
               class="filter-title"
+              ref="title"
               v-model="title"
               v-on:keyup.enter="selectSuggestionOrUpdateList"
               v-on:keyup.down="down"
@@ -24,7 +25,7 @@
                 v-bind:suggestion="suggestion"
                 v-bind:key="suggestion.id"
                 v-bind:class="{ active: isCurrent(index) }"
-                v-on:click.native="selectSuggestion(suggestion)"
+                v-on:click.native="selectSuggestionAndUpdateList(suggestion)"
               >
             </ul>
           </div>
