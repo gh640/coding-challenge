@@ -19,7 +19,8 @@
               v-on:keyup.esc="clearSuggestions"
               v-on:keyup="updateSuggestion"
             />
-            <ul class="filter-title-suggetions">
+            <ul class="filter-title-suggetions"
+              ref="suggestionsContainer">
               <li is="title-suggestion"
                 v-for="(suggestion, index) in suggestions"
                 v-bind:suggestion="suggestion"

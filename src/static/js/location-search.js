@@ -258,6 +258,17 @@ function calcCenterOfMap(locations) {
           if (this.currentIndex < this.suggestions.length - 1) {
             this.currentIndex += 1;
           }
+
+          // リスト内で自動スクロール
+          const container = this.$refs.suggestionsContainer;
+          const suggestions = container.querySelectorAll('li');
+          if (suggestions[this.currentIndex]) {
+            const selected = suggestions[this.currentIndex];
+            if (selected.offsetTop + selected.clientHeight >
+                container.scrollTop + container.clientHeight) {
+              container.scrollTop += selected.clientHeight;
+            }
+          }
         },
 
         // サジェスチョンの 1 つ上の要素を選択する
@@ -265,8 +276,18 @@ function calcCenterOfMap(locations) {
           if (this.suggestions.length < 1) {
             this.resetIndex();
           }
-          if (this.currentIndex > 1) {
+          if (this.currentIndex > 0) {
             this.currentIndex -= 1;
+          }
+
+          // リスト内で自動スクロール
+          const container = this.$refs.suggestionsContainer;
+          const suggestions = container.querySelectorAll('li');
+          if (suggestions[this.currentIndex]) {
+            const selected = suggestions[this.currentIndex];
+            if (selected.offsetTop < container.scrollTop) {
+              container.scrollTop -= selected.clientHeight;
+            }
           }
         },
 
