@@ -1,6 +1,4 @@
 var locationMap;
-var markers = [];
-var infoWindowsOpened = [];
 
 const MAP_ID = 'location-map';
 const MAP_CENTER = {lat: 37.7827, lng: -122.4186};
@@ -97,98 +95,15 @@ function initMap() {
   });
 }
 
-/**
- * 新しいロケ地設置を受けてマップを更新する。
- *
- * @param Array locations
- */
-function updateMap(locations) {
-  clearMarkers(markers);
-
-  locations.forEach(function (l) {
-    var marker = new google.maps.Marker({
-      position: {lat: l.geo_lat, lng: l.geo_lng},
-      map: locationMap,
-      // マップ内ウィンドウに情報を表示するためにロケ地情報を持たせる
-      location: l,
-    });
-
-    marker.addListener('click', function () {
-      // 他のウィンドウを閉じる
-      infoWindowsOpened.forEach(function (w) {
-        w.close();
-      });
-      infoWindowsOpened = [];
-
-      // マップ内ウィンドウに映画情報を表示する
-      var infoWindow = new google.maps.InfoWindow({
-        content: `<div class="map-info-window"><h1>${this.location.title} (${this.location.year})</h1><div>${this.location.locations}</div></div>`
-      });
-
-      infoWindow.open(locationMap, marker);
-      infoWindowsOpened.push(infoWindow);
-    });
-
-    markers.push(marker);
-  });
-
-  var center = calcCenterOfMap(locations);
-  if (center) {
-    locationMap.setCenter(center);
-  }
-}
-
-/**
- * 指定されたマーカーを削除する。
- *
- * @param google.maps.Marker[] markers
- */
-function clearMarkers(markers) {
-  setMapOnAll(markers, null);
-  markers = [];
-}
-
-/**
- * マーカーにマップをセットする。
- *
- * @param google.maps.Marker[] markers
- * @param google.maps.Map map
- */
-function setMapOnAll(markers, map) {
-  for (var i = 0; i < markers.length; i++) {
-    markers[i].setMap(map);
-  }
-}
-
-/**
- * ロケ地からマップの中心を計算する。
- *
- * @param Array locations
- */
-function calcCenterOfMap(locations) {
-  if (locations.length < 1) {
-    return null;
-  }
-
-  var totalLat = 0;
-  var totalLng = 0;
-
-  locations.forEach(function (l) {
-    totalLat += l.geo_lat;
-    totalLng += l.geo_lng;
-  });
-
-  return {
-    'lat': totalLat / locations.length,
-    'lng': totalLng / locations.length
-  };
-}
-
 (function () {
   // メッセージ表示時間（単位: ミリ秒）
   const MESSAGE_TTL = 2000;
   // サジェスチョンを取得しに行くまでの街時間（単位: ミリ秒）
   const SUGGESTION_WAIT = 400;
+  // マーカー
+  var markers = [];
+  // 開かれている地図内ウィンドウ
+  var infoWindowsOpened = [];
 
   init();
 
@@ -421,6 +336,93 @@ function calcCenterOfMap(locations) {
           app.message = '';
         }, MESSAGE_TTL);
       });
+  }
+
+  /**
+   * 新しいロケ地設置を受けてマップを更新する。
+   *
+   * @param Array locations
+   */
+  function updateMap(locations) {
+    clearMarkers(markers);
+
+    locations.forEach(function (l) {
+      var marker = new google.maps.Marker({
+        position: {lat: l.geo_lat, lng: l.geo_lng},
+        map: locationMap,
+        // マップ内ウィンドウに情報を表示するためにロケ地情報を持たせる
+        location: l,
+      });
+
+      marker.addListener('click', function () {
+        // 他のウィンドウを閉じる
+        infoWindowsOpened.forEach(function (w) {
+          w.close();
+        });
+        infoWindowsOpened = [];
+
+        // マップ内ウィンドウに映画情報を表示する
+        var infoWindow = new google.maps.InfoWindow({
+          content: `<div class="map-info-window"><h1>${this.location.title} (${this.location.year})</h1><div>${this.location.locations}</div></div>`
+        });
+
+        infoWindow.open(locationMap, marker);
+        infoWindowsOpened.push(infoWindow);
+      });
+
+      markers.push(marker);
+    });
+
+    var center = calcCenterOfMap(locations);
+    if (center) {
+      locationMap.setCenter(center);
+    }
+  }
+
+  /**
+   * 指定されたマーカーを削除する。
+   *
+   * @param google.maps.Marker[] markers
+   */
+  function clearMarkers(markers) {
+    setMapOnAll(markers, null);
+    markers = [];
+  }
+
+  /**
+   * マーカーにマップをセットする。
+   *
+   * @param google.maps.Marker[] markers
+   * @param google.maps.Map map
+   */
+  function setMapOnAll(markers, map) {
+    for (var i = 0; i < markers.length; i++) {
+      markers[i].setMap(map);
+    }
+  }
+
+  /**
+   * ロケ地からマップの中心を計算する。
+   *
+   * @param Array locations
+   */
+  function calcCenterOfMap(locations) {
+    if (locations.length < 1) {
+      return null;
+    }
+
+    var totalLat = 0;
+    var totalLng = 0;
+
+    locations.forEach(function (l) {
+      totalLat += l.geo_lat;
+      totalLng += l.geo_lng;
+    });
+
+    return {
+      'lat': totalLat / locations.length,
+      'lng': totalLng / locations.length
+    };
   }
 
 })();
