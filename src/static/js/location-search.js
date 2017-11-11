@@ -140,6 +140,8 @@ function updateMap(locations) {
 
 /**
  * 指定されたマーカーを削除する。
+ *
+ * @param google.maps.Marker[] markers
  */
 function clearMarkers(markers) {
   setMapOnAll(markers, null);
@@ -149,7 +151,7 @@ function clearMarkers(markers) {
 /**
  * マーカーにマップをセットする。
  *
- * @param google.maps.Marker markers
+ * @param google.maps.Marker[] markers
  * @param google.maps.Map map
  */
 function setMapOnAll(markers, map) {
@@ -209,13 +211,27 @@ function calcCenterOfMap(locations) {
         isTitleFocused: false
       },
       methods: {
-        // タイトルのフォーカスステータスを切り替える
-        toggleTitleFocus: function (value) {
-          this.isTitleFocused = value;
+        onKeyUp: function (event) {
+          switch (event.code) {
+            case 'Enter':
+              this.selectSuggestionOrUpdateList();
+              break;
+
+            case 'ArrowDown':
+              this.down();
+              break;
+
+            case 'ArrowUp':
+              this.up();
+              break;
+
+            default:
+              this.updateSuggestion();
+          }
         },
 
         // サジェスチョンのうち 1 つを選択、またはリストを更新する
-        selectSuggestionOrUpdateList: function (event) {
+        selectSuggestionOrUpdateList: function () {
           if (this.suggestions[this.currentIndex]) {
             this.selectSuggestion();
           } else {
@@ -224,40 +240,24 @@ function calcCenterOfMap(locations) {
         },
 
         // サジェスチョンのリストを更新する
-        updateSuggestion: _.debounce(function (event) {
+        updateSuggestion: _.debounce(function () {
           if (this.suggestionSelected) {
             this.suggestionSelected = false;
-            return;
-          }
-
-          // 特別に処理をする要素は対象外とする
-          const exceptions = [
-            'Enter',
-            'ArrowDown',
-            'ArrowUp',
-          ];
-
-          if (exceptions.includes(event.code)) {
             return;
           }
 
           if (this.title) {
             fetchSuggestions(this, this.title);
           } else {
-            this.resetSuggestions();
+            this.clearSuggestions();
           }
 
           this.resetIndex();
         }, SUGGESTION_WAIT),
 
-        // サジェスチョンをクリアする
-        clearSuggestions: function (event) {
-          this.resetIndex();
-          this.resetSuggestions();
-        },
-
         // サジェスチョンの 1 つ下の要素を選択する
-        down: function (event) {
+        down: function () {
+          console.log(this.currentIndex);
           if (this.suggestions.length < 1) {
             this.resetIndex();
           }
@@ -278,7 +278,8 @@ function calcCenterOfMap(locations) {
         },
 
         // サジェスチョンの 1 つ上の要素を選択する
-        up: function (event) {
+        up: function () {
+          console.log(this.currentIndex);
           if (this.suggestions.length < 1) {
             this.resetIndex();
           }
@@ -295,11 +296,6 @@ function calcCenterOfMap(locations) {
               container.scrollTop -= selected.clientHeight;
             }
           }
-        },
-
-        // 現在のサジェスチョン行が選択中かどうかをチェックする
-        isCurrent: function (index) {
-          return index === this.currentIndex;
         },
 
         // サジェスチョンのうち 1 つを選択しロケ地リストも更新する
@@ -321,14 +317,25 @@ function calcCenterOfMap(locations) {
           this.$refs.title.focus();
         },
 
-        // インデックスを初期状態（ -1 ）にリセットする
-        resetIndex: function () {
-          this.currentIndex -= 1;
+        // サジェスチョンをクリアする
+        clearSuggestions: function () {
+          this.resetIndex();
+          this.suggestions = [];
         },
 
-        // サジェスチョン一覧を削除する
-        resetSuggestions: function () {
-          this.suggestions = [];
+        // タイトルのフォーカスステータスを切り替える
+        toggleTitleFocus: function (value) {
+          this.isTitleFocused = value;
+        },
+
+        // インデックスを初期状態（ -1 ）にリセットする
+        resetIndex: function () {
+          this.currentIndex = -1;
+        },
+
+        // 現在のサジェスチョン行が選択中かどうかをチェックする
+        isCurrent: function (index) {
+          return index === this.currentIndex;
         },
       }
     })

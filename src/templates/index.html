@@ -13,10 +13,7 @@
               class="filter-title"
               ref="title"
               v-model="title"
-              v-on:keyup.enter="selectSuggestionOrUpdateList"
-              v-on:keyup.down="down"
-              v-on:keyup.up="up"
-              v-on:keyup="updateSuggestion"
+              v-on:keyup="onKeyUp"
               v-on:blur="toggleTitleFocus(false)"
               v-on:focus="toggleTitleFocus(true)"
             />
