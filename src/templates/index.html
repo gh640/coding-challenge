@@ -16,11 +16,14 @@
               v-on:keyup.enter="selectSuggestionOrUpdateList"
               v-on:keyup.down="down"
               v-on:keyup.up="up"
-              v-on:keyup.esc="clearSuggestions"
               v-on:keyup="updateSuggestion"
+              v-on:blur="toggleTitleFocus(false)"
+              v-on:focus="toggleTitleFocus(true)"
             />
             <ul class="filter-title-suggetions"
-              ref="suggestionsContainer">
+              ref="suggestionsContainer"
+              v-show="isTitleFocused"
+            >
               <li is="title-suggestion"
                 v-for="(suggestion, index) in suggestions"
                 v-bind:suggestion="suggestion"

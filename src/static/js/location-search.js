@@ -205,9 +205,15 @@ function calcCenterOfMap(locations) {
         suggestions: [],
         locations: [],
         currentIndex: -1,
-        suggestionSelected: false
+        suggestionSelected: false,
+        isTitleFocused: false
       },
       methods: {
+        // タイトルのフォーカスステータスを切り替える
+        toggleTitleFocus: function (value) {
+          this.isTitleFocused = value;
+        },
+
         // サジェスチョンのうち 1 つを選択、またはリストを更新する
         selectSuggestionOrUpdateList: function (event) {
           if (this.suggestions[this.currentIndex]) {
@@ -324,7 +330,6 @@ function calcCenterOfMap(locations) {
         resetSuggestions: function () {
           this.suggestions = [];
         },
-
       }
     })
 
