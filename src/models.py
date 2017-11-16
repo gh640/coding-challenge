@@ -46,3 +46,15 @@ class Location(Model):
                   .where(cls.geo_lat.is_null(False)) \
                   .where(cls.geo_lng.between(cls.LNG_MIN, cls.LNG_MAX)) \
                   .where(cls.geo_lat.between(cls.LAT_MIN, cls.LAT_MAX))
+
+    def as_dict(self):
+        '''Location オブジェクトを辞書に変換する
+        '''
+        return {
+            'id': self.id,
+            'title': self.title,
+            'year': self.year,
+            'locations': self.locations,
+            'geo_lng': self.geo_lng,
+            'geo_lat': self.geo_lat,
+        }
