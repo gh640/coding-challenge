@@ -14,7 +14,6 @@ from flask import render_template
 # from json_loader import load_locations
 # from json_loader import prepare_locations
 from models import Location
-from utils import location_to_dict
 
 
 app = Flask(__name__)
@@ -42,7 +41,7 @@ def location():
     if req_title:
         query = query.where(Location.title ** '%{}%'.format(req_title))
 
-    locations = [location_to_dict(l) for l in query]
+    locations = [l.as_dict() for l in query]
 
     return json.jsonify(locations)
 
