@@ -43,6 +43,7 @@
         </div>
         <div class="pager-wrapper">
           <paginate
+            v-show="pagerData.currentItems"
             ref="pager"
             v-bind:page-count="pagerData.totalPages"
             v-bind:click-handler="changePage"
