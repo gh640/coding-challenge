@@ -10,6 +10,8 @@
 サンフランシスコの映画ロケ地を地図上に示すサービス。
 補完機能のあるフィルタを使って結果を絞り込むことができる。
 
+![capture](https://raw.githubusercontent.com/gh640/coding-challenge/master/assets/capture.png)
+
 ## 機能
 
 - ページが読み込まれたら、登録のあるすべてのロケ地を地図上に表示する。
@@ -32,6 +34,45 @@
         - なし
 - DB
     - SQLite （リポジトリに登録）
+
+## 利用方法
+
+ローカル環境で動作を確認する場合には次のものを用意する必要があります。
+
+- Python 3 環境
+- Google API キー
+
+ローカル環境での動作確認手順は次のとおりです。
+
+リポジトリをクローンします。
+
+```bash
+$ git clone https://github.com/gh640/coding-challenge
+```
+
+Python の `pipenv` を使って依存関係をダウンロードします。
+
+```bash
+$ cd coding-challenge/
+$ pipenv install
+```
+
+`pipenv` について詳しくは次のページを参照してください。
+
+- [Pipenv: Python Dev Workflow for Humans](https://docs.pipenv.org/)
+
+`gunicorn` サーバを立ち上げます。
+
+```bash
+cd src/
+GOOGLE_API_KEY=[YOUR API KEY] pipenv run gunicorn app:app --log-file -
+```
+
+`[YOUR API KEY]` のところには、お持ちの Google API キーを入れてください。
+
+上のコマンドが問題がなく動けば、 `Listening at: http://127.0.0.1:8000 (63838)` といった感じでサーバのアドレスが表示されます。
+
+ブラウザでそちらにアクセスしてください。
 
 ## 残課題 / 改善が可能なポイント
 
