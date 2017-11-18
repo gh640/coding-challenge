@@ -39,7 +39,7 @@
           <status-message v-bind:message="message" v-if="message" />
         </div>
         <div class="current-count-wrapper">
-          <current-count v-bind:count="count" v-if="count" />
+          <current-count v-bind:pager-data="pagerData" />
         </div>
         <div class="pager-wrapper">
           <paginate

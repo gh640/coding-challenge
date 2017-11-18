@@ -64,7 +64,9 @@ def location():
             'pager_data': {
                 'totalItems':  total_items,
                 'totalPages':  total_pages,
+                'currentItems': len(locations),
                 'currentPage':  current_page,
+                'itemsPerPage': LOCATION_ITEMS_PER_PAGE,
             },
         },
         'entities': {

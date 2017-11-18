@@ -117,7 +117,6 @@ function initMap() {
       el: '#location-map-app',
       data: {
         title: '',
-        count: '',
         message: '',
         suggestions: [],
         locations: [],
@@ -127,7 +126,9 @@ function initMap() {
         pagerData: {
           totalItems: 0,
           totalPages: 0,
-          currentPage: 0
+          currentItems: 0,
+          currentPage: 0,
+          itemsPerPage: 0,
         }
       },
       methods: {
@@ -264,7 +265,7 @@ function initMap() {
         },
 
         resetCurrentPage: function () {
-          this.$refs.pager.paginated.selected = 0;
+          this.$refs.pager.selected = 0;
         }
       }
     })
@@ -290,8 +291,23 @@ function initMap() {
 
     // 現在のカウント数
     Vue.component('current-count', {
-      'props': ['count'],
-      'template': '<span>{{ count }} location(s) found.</span>'
+      'props': {
+        'pagerData': Object,
+      },
+      'template': '<span v-if="pagerData.currentItems && pagerData.totalItems">' +
+          '{{ firstIndex }} - {{ lastIndex }} / {{ pagerData.totalItems }}' +
+        '</span>' +
+        '<span v-else>' +
+          '---' +
+        '</span>',
+      'computed': {
+        'firstIndex': function () {
+          return (this.pagerData.currentPage - 1) * this.pagerData.itemsPerPage + 1;
+        },
+        'lastIndex': function () {
+          return (this.pagerData.currentPage - 1) * this.pagerData.itemsPerPage + this.pagerData.currentItems;
+        }
+      }
     })
 
     // ステータスメッセージ
@@ -299,39 +315,6 @@ function initMap() {
       'props': ['message'],
       'template': '<span>{{ message }}</span>'
     })
-
-    // // ページャ
-    // Vue.component('pager-links', {
-    //   'props': {
-    //     'pagerData': Object,
-    //     'pages': {
-    //       type: Array,
-    //       default: function () {
-    //         return [];
-    //       }
-    //     }
-    //   },
-    //   'template': '<ul>' +
-    //       '<li><a ></a></li>' +
-    //       '<li v-for="page in pages">' +
-    //         '<a v-on:click="">{{ page.index }}</a>' +
-    //       '</li>' +
-    //       '<li><a ></a></li>' +
-    //     '</ul>',
-    //   'watch': {
-    //     'pagerData': function (_el) {
-    //       var pages = [];
-    //       for (var i = 1; i <= _el.totalPages; i++) {
-    //         pages.push({
-    //           'index': i,
-    //           'isCurrent': (_el.currentPage === i)
-    //         });
-    //       }
-
-    //       this.pages = pages;
-    //     }
-    //   }
-    // });
 
     // ロケーションのテーブル
     Vue.component('location-table-row', {
@@ -355,6 +338,7 @@ function initMap() {
       })
       .then(function (response) {
         app.suggestions = response.data;
+        app.message = '';
       })
       .catch(function (error) {
         app.message = 'failed to fetch data :(';
@@ -375,7 +359,6 @@ function initMap() {
       .then(function (response) {
         app.locations = response.data.entities.locations;
         updateMap(app.locations);
-        app.count = app.locations.length;
         app.pagerData = response.data.meta.pager_data;
         app.message = '';
       })
