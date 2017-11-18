@@ -366,7 +366,6 @@ function initMap() {
    * ロケ地データをフェッチして更新する。
    */
   function updateLocations(app, title, page) {
-    app.message = 'loading...';
     axios.get('/location', {
         'params': {
           'title': title,
@@ -378,16 +377,10 @@ function initMap() {
         updateMap(app.locations);
         app.count = app.locations.length;
         app.pagerData = response.data.meta.pager_data;
-        app.message = 'loaded!';
-        window.setTimeout(function () {
-          app.message = '';
-        }, MESSAGE_TTL);
+        app.message = '';
       })
       .catch(function (error) {
         app.message = 'failed to fetch data :(';
-        window.setTimeout(function () {
-          app.message = '';
-        }, MESSAGE_TTL);
       });
   }
 
