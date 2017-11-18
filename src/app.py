@@ -3,6 +3,7 @@
 '''フロントコントローラを提供する
 '''
 
+from math import ceil
 import os
 
 from flask import json
@@ -14,6 +15,10 @@ from flask import render_template
 # from json_loader import load_locations
 # from json_loader import prepare_locations
 from models import Location
+
+
+# ページ毎のロケ地表示する
+LOCATION_ITEMS_PER_PAGE = 20
 
 
 app = Flask(__name__)
@@ -35,15 +40,37 @@ def index():
 @app.route('/location')
 def location():
     req_title = request.args.get('title', None)
+    try:
+        req_page = int(request.args.get('page', 1))
+    except ValueError as e:
+        req_page = 1
 
     query = Location.selectbase()
 
     if req_title:
         query = query.where(Location.title ** '%{}%'.format(req_title))
 
+    total_items = query.count()
+    total_pages = ceil(total_items / LOCATION_ITEMS_PER_PAGE)
+
+    current_page = req_page if req_page <= total_pages else total_pages
+
+    query = query.paginate(current_page, LOCATION_ITEMS_PER_PAGE)
+
     locations = [l.as_dict() for l in query]
 
-    return json.jsonify(locations)
+    return json.jsonify({
+        'meta': {
+            'pager_data': {
+                'totalItems':  total_items,
+                'totalPages':  total_pages,
+                'currentPage':  current_page,
+            },
+        },
+        'entities': {
+            'locations': locations,
+        },
+    })
 
 
 @app.route('/movie')

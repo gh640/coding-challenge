@@ -41,6 +41,15 @@
         <div class="current-count-wrapper">
           <current-count v-bind:count="count" v-if="count" />
         </div>
+        <div class="pager-wrapper">
+          <paginate
+            ref="pager"
+            v-bind:page-count="pagerData.totalPages"
+            v-bind:click-handler="changePage"
+            v-bind:container-class="'pager'"
+          >
+          </paginate>
+        </div>
         <div id="location-map"></div>
         <div class="result-table-wrapper">
           <table>
@@ -63,6 +72,7 @@
       </div>
     </div>
     <script src="https://unpkg.com/vue"></script>
+    <script src="https://unpkg.com/vuejs-paginate"></script>
     <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
     <script src="https://unpkg.com/lodash"></script>
     <script src="{{ config.ROOT }}/static/js/location-search.js"></script>

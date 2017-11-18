@@ -75,6 +75,38 @@ body {
   text-align: center;
 }
 
+.pager-wrapper {
+  margin-bottom: 20px;
+}
+
+.pager {
+  margin: 0;
+  padding: 0;
+  list-style-type: none;
+  text-align: center;
+}
+
+.pager li {
+  display: inline-block;
+}
+
+.pager li.disabled a {
+  color: #666;
+  background-color: #f8f8f8;
+}
+
+.pager li.active a {
+  color: white;
+  background-color: #3ac;
+}
+
+.pager a {
+  display: block;
+  margin: 4px;
+  padding: 4px 8px;
+  background-color: #eee;
+}
+
 #location-map {
   width: auto;
   height: 400px;

@@ -123,7 +123,12 @@ function initMap() {
         locations: [],
         currentIndex: -1,
         suggestionSelected: false,
-        isTitleFocused: false
+        isTitleFocused: false,
+        pagerData: {
+          totalItems: 0,
+          totalPages: 0,
+          currentPage: 0
+        }
       },
       methods: {
         onKeyUp: function (event) {
@@ -151,6 +156,7 @@ function initMap() {
             this.selectSuggestion();
           } else {
             updateLocations(this, this.title);
+            this.resetCurrentPage();
           }
         },
 
@@ -172,7 +178,6 @@ function initMap() {
 
         // サジェスチョンの 1 つ下の要素を選択する
         down: function () {
-          console.log(this.currentIndex);
           if (this.suggestions.length < 1) {
             this.resetIndex();
           }
@@ -217,6 +222,7 @@ function initMap() {
         selectSuggestionAndUpdateList: function (suggestion) {
           this.selectSuggestion(suggestion);
           updateLocations(this, this.title);
+          this.resetCurrentPage();
         },
 
         // サジェスチョンのうち 1 つを選択する
@@ -252,6 +258,14 @@ function initMap() {
         isCurrent: function (index) {
           return index === this.currentIndex;
         },
+
+        changePage: function (pageIndex) {
+          updateLocations(this, this.title, pageIndex);
+        },
+
+        resetCurrentPage: function () {
+          this.$refs.pager.paginated.selected = 0;
+        }
       }
     })
 
@@ -265,11 +279,15 @@ function initMap() {
    * 利用するコンポーネントを定義する。
    */
   function defineComponents() {
+    // ページャ
+    Vue.component('paginate', VuejsPaginate);
+
     // 自動補完候補
     Vue.component('title-suggestion', {
       'props': ['suggestion'],
       'template': '<li>{{ suggestion.title }}</li>'
     });
+
     // 現在のカウント数
     Vue.component('current-count', {
       'props': ['count'],
@@ -281,6 +299,39 @@ function initMap() {
       'props': ['message'],
       'template': '<span>{{ message }}</span>'
     })
+
+    // // ページャ
+    // Vue.component('pager-links', {
+    //   'props': {
+    //     'pagerData': Object,
+    //     'pages': {
+    //       type: Array,
+    //       default: function () {
+    //         return [];
+    //       }
+    //     }
+    //   },
+    //   'template': '<ul>' +
+    //       '<li><a ></a></li>' +
+    //       '<li v-for="page in pages">' +
+    //         '<a v-on:click="">{{ page.index }}</a>' +
+    //       '</li>' +
+    //       '<li><a ></a></li>' +
+    //     '</ul>',
+    //   'watch': {
+    //     'pagerData': function (_el) {
+    //       var pages = [];
+    //       for (var i = 1; i <= _el.totalPages; i++) {
+    //         pages.push({
+    //           'index': i,
+    //           'isCurrent': (_el.currentPage === i)
+    //         });
+    //       }
+
+    //       this.pages = pages;
+    //     }
+    //   }
+    // });
 
     // ロケーションのテーブル
     Vue.component('location-table-row', {
@@ -314,17 +365,19 @@ function initMap() {
   /**
    * ロケ地データをフェッチして更新する。
    */
-  function updateLocations(app, title) {
+  function updateLocations(app, title, page) {
     app.message = 'loading...';
     axios.get('/location', {
         'params': {
-          'title': title
+          'title': title,
+          'page': page
         }
       })
       .then(function (response) {
-        app.locations = response.data;
+        app.locations = response.data.entities.locations;
         updateMap(app.locations);
         app.count = app.locations.length;
+        app.pagerData = response.data.meta.pager_data;
         app.message = 'loaded!';
         window.setTimeout(function () {
           app.message = '';
