@@ -47,6 +47,7 @@
             v-show="pagerData.currentItems"
             ref="pager"
             v-bind:page-count="pagerData.totalPages"
+            v-bind:page-range="2"
             v-bind:click-handler="changePage"
             v-bind:container-class="'pager'"
           >
