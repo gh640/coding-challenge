@@ -79,10 +79,12 @@ def location():
 def movie():
     req_title = request.args.get('title', None)
 
-    query = Location.select(Location.title).distinct()
+    if not req_title:
+        return json.jsonify([])
 
-    if req_title:
-        query = query.where(Location.title ** '%{}%'.format(req_title))
+    query = (Location.select(Location.title)
+                     .distinct()
+                     .where(Location.title ** '%{}%'.format(req_title)))
 
     movies = [{'id': index, 'title': l.title} for index, l in enumerate(query)]
 
