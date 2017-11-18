@@ -98,8 +98,10 @@ function initMap() {
 (function () {
   // メッセージ表示時間（単位: ミリ秒）
   const MESSAGE_TTL = 2000;
-  // サジェスチョンを取得しに行くまでの街時間（単位: ミリ秒）
+  // サジェスチョンを取得しに行くまでの待ち時間（単位: ミリ秒）
   const SUGGESTION_WAIT = 400;
+  // タイトルフィールドからフォーカスを外した後サジェスチョンを非表示するするまでの時間（単位: ミリ秒）
+  const TITLE_FIELD_BLUR_WAIT = 200;
   // マーカー
   var markers = [];
   // 開かれている地図内ウィンドウ
@@ -200,7 +202,6 @@ function initMap() {
 
         // サジェスチョンの 1 つ上の要素を選択する
         up: function () {
-          console.log(this.currentIndex);
           if (this.suggestions.length < 1) {
             this.resetIndex();
           }
@@ -245,10 +246,19 @@ function initMap() {
           this.suggestions = [];
         },
 
-        // タイトルのフォーカスステータスを切り替える
-        toggleTitleFocus: function (value) {
-          this.isTitleFocused = value;
+        // タイトルのフォーカスステータスを on にする
+        activateTitleFocus: function () {
+          this.isTitleFocused = true;
         },
+
+        // タイトルのフォーカスステータスを off にする
+        // サジェスチョンリストがクリックされたときにフォーカスが先に外れると
+        // autocomplete が効かないので待ち時間を入れる
+        clearTitleFocus: _.debounce(function () {
+          if (this.$refs.title != document.activeElement) {
+            this.isTitleFocused = false;
+          }
+        }, TITLE_FIELD_BLUR_WAIT),
 
         // インデックスを初期状態（ -1 ）にリセットする
         resetIndex: function () {

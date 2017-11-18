@@ -11,15 +11,16 @@
       <h1 class="page-title">SF Movie Locations Search</h1>
       <div id="location-map-app">
         <div class="filter-form">
-          <div class="filter-form-inner">
+          <div class="filter-form-inner"
+          >
             <input type="text"
               placeholder="title"
               class="filter-title"
               ref="title"
               v-model="title"
               v-on:keyup="onKeyUp"
-              v-on:blur="toggleTitleFocus(false)"
-              v-on:focus="toggleTitleFocus(true)"
+              v-on:blur="clearTitleFocus"
+              v-on:focus="activateTitleFocus"
             />
             <ul class="filter-title-suggetions"
               ref="suggestionsContainer"
