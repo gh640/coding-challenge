@@ -49,12 +49,10 @@ class Location(Model):
 
     def as_dict(self):
         '''Location オブジェクトを辞書に変換する
+
+        ただし raw は通常使われないので除外する
         '''
-        return {
-            'id': self.id,
-            'title': self.title,
-            'year': self.year,
-            'locations': self.locations,
-            'geo_lng': self.geo_lng,
-            'geo_lat': self.geo_lat,
-        }
+        exceptions = ['raw']
+        return {key: value
+                for key, value in self.__dict__['_data'].items()
+                if key not in exceptions}
