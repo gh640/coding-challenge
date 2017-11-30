@@ -1,9 +1,12 @@
 # コーディングチャレンジ
 
+Uber のコーディングチャレンジに取り組んでみました。
+
 ## リンク
 
-- https://github.com/uber/coding-challenge-tools
-- https://github.com/uber/coding-challenge-tools/blob/master/coding_challenge.md
+- [Uber's tools team coding challenge](https://github.com/uber/coding-challenge-tools)
+- [coding-challenge-tools/coding_challenge.md at master · uber/coding-challenge-tools · GitHub](https://github.com/uber/coding-challenge-tools/blob/master/coding_challenge.md)
+
 
 ## 選択アプリ: SF Movies
 
