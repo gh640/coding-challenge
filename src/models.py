@@ -3,13 +3,15 @@
 '''データモデルを提供する
 '''
 
+from pathlib import Path
+
 from peewee import SqliteDatabase
 from peewee import Model
 # from peewee import PrimaryKeyField, DateField, BooleanField
 from peewee import CharField, IntegerField, FloatField
 
 
-DATABASE_PATH = '../.db.sqlite'
+DATABASE_PATH = str((Path(__file__).parent.parent / '.db.sqlite') .absolute())
 
 
 db = SqliteDatabase(DATABASE_PATH)
