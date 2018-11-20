@@ -1,96 +1,104 @@
-# コーディングチャレンジ
+# Coding challenge
 
-Uber のコーディングチャレンジに取り組んでみました。
+This is a trial for Uber coding challenge.
 
-## リンク
+
+## Links
 
 - [Uber's tools team coding challenge](https://github.com/uber/coding-challenge-tools)
 - [coding-challenge-tools/coding_challenge.md at master · uber/coding-challenge-tools · GitHub](https://github.com/uber/coding-challenge-tools/blob/master/coding_challenge.md)
 
 
-## 選択アプリ: SF Movies
+## The sample app I selected: SF Movies
 
-サンフランシスコの映画ロケ地を地図上に示すサービス。
-補完機能のあるフィルタを使って結果を絞り込むことができる。
+This sample site shows a map which shows movie locations with pins.
+Users can filter locations by using a text filter with autocompletion function.
 
 ![capture](https://raw.githubusercontent.com/gh640/coding-challenge/master/assets/capture.png)
 
-## 機能
 
-- ページが読み込まれたら、登録のあるすべてのロケ地を地図上に表示する。
-- 映画のタイトルの一部をテキストフィールドに入力して Enter で絞り込みが行える。
-- タイトルのテキストフィールドは一部を入力すると一致する候補一覧を表示してくれる。
-- 候補一覧は上下カーソルキーで選択でき、 Enter キーでそれを入力できる。
-- 候補一覧はクリックでも選択できる。
+## Functions
 
-## 技術
+- The site shows locations for a page on a map when the page is loaded.
+- Users can filter locations by entering parts of movie titles in a textbox.
+- The site shows movie titles which match the entered text below the textbox.
+- Users can select one among suggested titles with either cursor keys or pointer.
 
-- バックエンド
+
+## Technology stack used
+
+- Backend
     - Python
     - [Flask](http://flask.pocoo.org/docs/)
-- フロントエンド
+- Frontend
     - JavaScript
         - [Vue.js](https://vuejs.org/)
         - [axios](https://github.com/axios/axios)
         - [Lodash](https://lodash.com/)
     - CSS
-        - なし
-- DB
-    - SQLite （リポジトリに登録）
+        - (nothing)
+- Database
+    - SQLite
 
-## 利用方法
 
-ローカル環境で動作を確認する場合には次のものを用意する必要があります。
+## Usage
 
-- Python 3 環境
-- Google API キー
+### Prerequisition
 
-ローカル環境での動作確認手順は次のとおりです。
+You need to prepare the following things to run this app in your environment.
 
-リポジトリをクローンします。
+- [Python 3](https://www.python.org/downloads/)
+- [Pipenv](https://github.com/pypa/pipenv)
+- [Google API key](https://developers.google.com/)
+
+### Steps
+
+After you've got ready, you can run the app with the following steps.
+
+Clone this repository.
 
 ```bash
 $ git clone https://github.com/gh640/coding-challenge
 ```
 
-Python の `pipenv` を使って依存関係をダウンロードします。
+Install the dependencies with `pipenv` command.
 
 ```bash
 $ cd coding-challenge/
+$ pip install pipenv
 $ pipenv install
 ```
 
-`pipenv` について詳しくは次のページを参照してください。
+See the page below for more information on `pipenv`.
 
 - [Pipenv: Python Dev Workflow for Humans](https://docs.pipenv.org/)
 
-`gunicorn` サーバを立ち上げます。
+Run `gunicorn` server.
 
 ```bash
 cd src/
 GOOGLE_API_KEY=[YOUR API KEY] pipenv run gunicorn app:app --log-file -
 ```
 
-`[YOUR API KEY]` のところには、お持ちの Google API キーを入れてください。
+Change the `[YOUR API KEY]` to your Google API key.
 
-上のコマンドが問題がなく動けば、 `Listening at: http://127.0.0.1:8000 (63838)` といった感じでサーバのアドレスが表示されます。
+If the command above runs successfully, you can see the app through the address displayed in the standard output like `Listening at: http://127.0.0.1:8000 (63838)`.
 
-ブラウザでそちらにアクセスしてください。
 
-## 残課題 / 改善が可能なポイント
+## TODOS
 
-- 全体
-    - 自動テストの追加
-- バックエンド
-    - ビューの整理
-    - ファイルの粒度の調整
-- フロントエンド
-    - コンポーネントの粒度の調整
-    - 依存ライブラリを CDN から自サイト提供に変更
-    - 「 ES xx 」の導入
-    - 見栄え（ css ）の調整
-    - SCSS の導入
-    - バックエンドから取得した映画候補のキャッシュ導入
+- Overall
+    - Add tests.
+- Backend
+    - Organize views.
+    - Change the granularity of files.
+- Frontend
+    - Split components out to different files.
+    - Change the source of the libraries from CDN to the site.
+    - Modernize the code using ESxxx features.
+    - Improve the look with css.
+    - Introduce SCSS.
+    - Introduce a cache system for queries.
 - DB
-    - 正規化（映画情報とロケ地情報の分割）
-    - 非 SQLite 化
+    - Normalize the tables (Split movie data and location data).
+    - Migrate from SQLite to MySQL or something else.
