@@ -1,17 +1,15 @@
 [[source]]
-
-url = "https://pypi.python.org/simple"
+url = "https://pypi.org/simple"
 verify_ssl = true
 name = "pypi"
 
-
 [packages]
-
-flask = "*"
-peewee = "*"
-gunicorn = "*"
-requests = "*"
-
+flask = "~=1.0.0"
+peewee = "~=3.7.0"
+gunicorn = "~=19.9.0"
+requests = "~=2.20.0"
 
 [dev-packages]
 
+[requires]
+python_version = "3.7"
